@@ -430,12 +430,40 @@ void CMainFrame::OnComputeFactorial()
 	FactorialThreadData* pData = new FactorialThreadData;
 	pData->nInput = n;
 	pData->pNotifyWnd = this;
-	AfxBeginThread(FactorialWorkerThread, pData);
+	m_pWorkerThread  = AfxBeginThread(FactorialWorkerThread, pData);
 }
 
 void CMainFrame::OnDisplayUIWindow()
 {
 	CWinThread* pThread = AfxBeginThread(RUNTIME_CLASS(UIThread));
+}
+
+void CMainFrame::OnSustpendedWorkerThread()
+{
+	if (m_pWorkerThread != nullptr && !m_bSuspended)
+	{
+		m_pWorkerThread->SuspendThread();
+		m_bSuspended = true;
+	}
+}
+
+void CMainFrame::OnResumedWorkerThread()
+{
+	if (m_pWorkerThread != nullptr && m_bSuspended)
+	{
+		m_pWorkerThread->ResumeThread();
+		m_bSuspended = false;
+	}
+}
+
+void CMainFrame::OnUpdateThreadSuspend(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(m_pWorkerThread != nullptr && !m_bSuspended);
+}
+
+void CMainFrame::OnUpdateThreadResume(CCmdUI* pCmdUI)
+{
+	pCmdUI->Enable(m_pWorkerThread != nullptr && m_bSuspended);
 }
 
 void CMainFrame::OnSettingChange(UINT uFlags, LPCTSTR lpszSection)
