@@ -6,6 +6,7 @@ struct FactorialThreadData
 {
     int nInput;
     CWnd* pNotifyWnd;
+    volatile LONG* pContinue;
 };
 
-UINT FactorialWorkerThread(LPVOID pParam);
+UINT FactorialWorkerThread(LPVOID pParam, volatile LONG* pContinue);

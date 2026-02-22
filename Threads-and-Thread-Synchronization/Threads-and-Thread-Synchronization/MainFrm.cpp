@@ -423,19 +423,36 @@ BOOL CMainFrame::LoadFrame(UINT nIDResource, DWORD dwDefaultStyle, CWnd* pParent
 
 	return TRUE;
 }
+LRESULT CMainFrame::OnStopWorker(WPARAM wParam, LPARAM lParam)
+{
+	if (g_nContinue)
+		*g_nContinue = 0;
+	return 0;
+}
 
 void CMainFrame::OnComputeFactorial()
 {
 	int n = rand() % 40;
+	g_nContinue = new long(1);
 	FactorialThreadData* pData = new FactorialThreadData;
 	pData->nInput = n;
 	pData->pNotifyWnd = this;
-	m_pWorkerThread  = AfxBeginThread(FactorialWorkerThread, pData);
+	pData->pContinue = g_nContinue;
+	m_pWorkerThread = AfxBeginThread(FactorialWorkerThread, pData, THREAD_PRIORITY_NORMAL, 0, CREATE_SUSPENDED, NULL);
+	m_pWorkerThread->m_bAutoDelete = FALSE;
+
+	HANDLE hThread;
+	::DuplicateHandle(
+		GetCurrentProcess(), m_pWorkerThread->m_hThread,  // Source
+		GetCurrentProcess(), &hThread,                   // Destination
+		0, FALSE, DUPLICATE_SAME_ACCESS);
+
+	m_pWorkerThread->ResumeThread();
 
 	Sleep(2000);
 
 	DWORD dwExitCode = 0;
-	if (::GetExitCodeThread(m_pWorkerThread->m_hThread, &dwExitCode))
+	if (::GetExitCodeThread(hThread, &dwExitCode))
 	{
 		if (dwExitCode == STILL_ACTIVE){
 			AfxMessageBox(_T("Thread still running"));
@@ -446,6 +463,8 @@ void CMainFrame::OnComputeFactorial()
 			CString msg;
 			msg.Format(_T("Thread finished. Exit Code = %lu"), dwExitCode);
 			AfxMessageBox(msg);
+			::CloseHandle(hThread);
+			delete g_nContinue;
 		}
 	}
 	else
