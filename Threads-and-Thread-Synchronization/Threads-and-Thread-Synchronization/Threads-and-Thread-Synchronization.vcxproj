@@ -185,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="ChildFrm.h" />
     <ClInclude Include="ClassView.h" />
+    <ClInclude Include="FactorialWorker.h" />
     <ClInclude Include="FileView.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="Threads-and-Thread-SynchronizationDoc.h" />
     <ClInclude Include="Threads-and-Thread-SynchronizationView.h" />
     <ClInclude Include="ViewTree.h" />
+    <ClInclude Include="WorkerThread.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ChildFrm.cpp" />
@@ -215,6 +217,7 @@
     <ClCompile Include="Threads-and-Thread-SynchronizationDoc.cpp" />
     <ClCompile Include="Threads-and-Thread-SynchronizationView.cpp" />
     <ClCompile Include="ViewTree.cpp" />
+    <ClCompile Include="WorkerThread.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="ThreadsandThreadSynchronization.rc" />
