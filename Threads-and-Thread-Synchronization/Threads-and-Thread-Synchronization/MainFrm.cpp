@@ -433,6 +433,25 @@ void CMainFrame::OnComputeFactorial()
 	m_pWorkerThread  = AfxBeginThread(FactorialWorkerThread, pData);
 
 	Sleep(2000);
+
+	DWORD dwExitCode = 0;
+	if (::GetExitCodeThread(m_pWorkerThread->m_hThread, &dwExitCode))
+	{
+		if (dwExitCode == STILL_ACTIVE){
+			AfxMessageBox(_T("Thread still running"));
+		}
+
+		else
+		{
+			CString msg;
+			msg.Format(_T("Thread finished. Exit Code = %lu"), dwExitCode);
+			AfxMessageBox(msg);
+		}
+	}
+	else
+	{
+		AfxMessageBox(_T("GetExitCodeThread failed (invalid handle or thread object was auto-deleted)."));
+	}
 }
 
 void CMainFrame::OnDisplayUIWindow()

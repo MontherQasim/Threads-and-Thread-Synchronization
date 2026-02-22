@@ -14,3 +14,8 @@ ThreadWindow::ThreadWindow()
 ThreadWindow::~ThreadWindow()
 {
 }
+
+void ThreadWindow::OnClose()
+{
+    CFrameWnd::OnClose();
+}

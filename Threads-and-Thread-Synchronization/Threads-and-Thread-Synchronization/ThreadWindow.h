@@ -7,6 +7,6 @@ public:
     virtual ~ThreadWindow();
 
 protected:
-
+    afx_msg void OnClose();
     DECLARE_MESSAGE_MAP()
 };
